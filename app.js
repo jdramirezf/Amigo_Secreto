@@ -1,5 +1,14 @@
-function agregarAmigo() {
-    // Obtenemos los elementos de las etiquetas input, ul y p
+document.getElementById('amigo').addEventListener('input', function() {
+    this.value = this.value.toUpperCase().replace(/[^A-Z\s]/g, '').slice(0, 15);
+    document.getElementById('mensaje').textContent = `Número de caracteres ingresados: ${this.value.length}`;
+});
+document.getElementById('listaAmigos').addEventListener('DOMSubtreeModified', function() {
+    document.querySelector('.button-reset').disabled = this.children.length === 0;
+});
+const amigos = [];
+const seleccionados = new Set();
+
+document.querySelector('.button-add').addEventListener('click', function() {
     const input = document.getElementById('amigo');
     const listaAmigos = document.getElementById('listaAmigos');
     const mensaje = document.getElementById('mensaje');
@@ -11,20 +20,70 @@ function agregarAmigo() {
         return;
     }
 
-    const li = document.createElement('li');
-    li.textContent = nombre;
-    listaAmigos.appendChild(li);
+    if (amigos.includes(nombre)) {
+        alert('El nombre ya está en la lista.');
+        return;
+    }
 
-    input.value = '';
+    if (amigos.length >= 8) {
+        alert('No es posible agregar más amigos.');
+        return;
+    }
 
-    let totalCaracteres = 0;
-    document.querySelectorAll('#listaAmigos li').forEach(item => {
-        totalCaracteres += item.textContent.length;
+    amigos.push(nombre);
+
+    listaAmigos.innerHTML = '';
+    amigos.forEach((amigo, index) => {
+        const li = document.createElement('li');
+        li.textContent = `${index + 1}. ${amigo}`;
+        listaAmigos.appendChild(li);
     });
 
-    mensaje.textContent = `El número total de caracteres es: ${totalCaracteres}`;
-}
+    input.value = '';
+    mensaje.textContent = 'Número de caracteres ingresados: 0';
 
-document.getElementById('amigo').addEventListener('input', function() {
-    this.value = this.value.toUpperCase().replace(/[^A-Z\s]/g, '');
+    if (amigos.length >= 8) {
+        input.disabled = true;
+        document.querySelector('.button-add').disabled = true;
+    }
+
+    document.querySelector('.button-reset').disabled = amigos.length === 0;
+    document.querySelector('.button-draw').disabled = amigos.length < 4;
 });
+
+document.querySelector('.button-draw').addEventListener('click', function() {
+    const listaAmigos = document.getElementById('listaAmigos');
+    const resultado = document.getElementById('resultado');
+
+    if (amigos.length < 4) {
+        alert('Se necesitan mínimo 4 amigos para jugar.');
+        return;
+    }
+
+    if (seleccionados.size === amigos.length) {
+        resultado.textContent = 'Fueron asignados todos los amigos de la lista.';
+        return;
+    }
+
+    let amigoSeleccionado;
+    do {
+        amigoSeleccionado = amigos[Math.floor(Math.random() * amigos.length)];
+    } while (seleccionados.has(amigoSeleccionado));
+
+    seleccionados.add(amigoSeleccionado);
+    resultado.textContent = `Amigo seleccionado: ${amigoSeleccionado}`;
+});
+
+document.querySelector('.button-reset').addEventListener('click', function() {
+    amigos.length = 0;
+    seleccionados.clear();
+    document.getElementById('listaAmigos').innerHTML = '';
+    document.getElementById('resultado').textContent = '';
+    document.getElementById('amigo').disabled = false;
+    document.querySelector('.button-add').disabled = false;
+    document.querySelector('.button-reset').disabled = true;
+    document.querySelector('.button-draw').disabled = true;
+});
+
+document.querySelector('.button-reset').disabled = amigos.length === 0;
+document.querySelector('.button-draw').disabled = amigos.length < 4;

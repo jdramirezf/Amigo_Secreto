@@ -23,7 +23,6 @@
                 <button id="Agregar" class="button-add" onclick="agregarAmigo()">Añadir</button>
             </div>
             <p id="mensaje">El número total de caracteres es: 0</p>
-            <p>Solo permite ingresar solo texto</p>
             <ul id="listaAmigos" class="name-list" aria-labelledby="listaAmigos" role="list"></ul>
             <ul id="resultado" class="result-list" aria-live="polite"></ul>
 
@@ -32,6 +31,10 @@
                     <img src="assets/play_circle_outline.png" alt="Ícono para sortear">
                     Sortear amigo
                 </button>
+                <button class="button-reset" onclick="reset()" aria-label="Sortear amigo secreto">
+                    <img src="assets/play_circle_outline.png" alt="Ícono para sortear">
+                    Nuevo juego</button>
+
             </div>
         </section>
     </main>
