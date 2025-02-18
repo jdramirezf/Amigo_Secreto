@@ -1,22 +1,30 @@
+function agregarAmigo() {
+    // Obtenemos los elementos de las etiquetas input, ul y p
+    const input = document.getElementById('amigo');
+    const listaAmigos = document.getElementById('listaAmigos');
+    const mensaje = document.getElementById('mensaje');
 
-document.getElementById("amigo").addEventListener("input", validarTexto);
-document.getElementById("amigo").addEventListener("input", function() {
-    this.value = this.value.toUpperCase();
-});
-function validarTexto() {
-    let input = document.getElementById("amigo");
-    let mensaje = document.getElementById("mensaje");
-    
-    if (input && mensaje) {
-        // Expresión regular para permitir solo letras y espacios
-        let soloLetras = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/;
-        
-        // Si el valor no cumple la expresión regular, eliminamos el último caracter ingresado
-        if (!soloLetras.test(input.value) && input.value.length > 0) {
-            input.value = input.value.slice(0, -1);
-        }
-        
-        // Actualiza el mensaje con la cantidad de caracteres
-        mensaje.textContent = "El número total de caracteres es: " + input.value.length;
+    let nombre = input.value.toUpperCase().replace(/[^A-Z\s]/g, '');
+
+    if (nombre.length < 2 || nombre.length > 15) {
+        alert('El nombre debe tener entre 2 y 15 caracteres.');
+        return;
     }
+
+    const li = document.createElement('li');
+    li.textContent = nombre;
+    listaAmigos.appendChild(li);
+
+    input.value = '';
+
+    let totalCaracteres = 0;
+    document.querySelectorAll('#listaAmigos li').forEach(item => {
+        totalCaracteres += item.textContent.length;
+    });
+
+    mensaje.textContent = `El número total de caracteres es: ${totalCaracteres}`;
 }
+
+document.getElementById('amigo').addEventListener('input', function() {
+    this.value = this.value.toUpperCase().replace(/[^A-Z\s]/g, '');
+});
